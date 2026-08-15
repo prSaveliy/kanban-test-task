@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "tsx src/server.ts",
+    "docker:start": "prisma migrate deploy && tsx src/server.ts",
     "build": "tsc",
     "test": "vitest run",
     "lint": "eslint .",
