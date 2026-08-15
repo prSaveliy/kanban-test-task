@@ -110,6 +110,7 @@ The application uses a PostgreSQL database managed via Prisma ORM:
 
 ```bash
 cd backend
+cp .env.test.example .env.test
 npm install
 npx prisma generate
 npm test
