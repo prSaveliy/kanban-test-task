@@ -5,6 +5,7 @@ import { logger } from '../utils/logger.js';
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   PORT: z.coerce.number().int().positive(),
+  HOST: z.string().optional().default('localhost'),
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   CORS_ORIGIN: z.string().min(1, 'CORS_ORIGIN is required'),
 });
