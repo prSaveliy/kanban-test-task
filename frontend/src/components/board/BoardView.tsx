@@ -23,7 +23,13 @@ interface BoardViewProps {
 
 export const BoardView = ({ board }: BoardViewProps) => {
   const [activeCard, setActiveCard] = useState<Card | null>(null);
-  const { moveCard, moveCardOptimistic } = useBoardStore();
+  const [dragStartInfo, setDragStartInfo] = useState<{
+    cardId: number;
+    sourceColumnId: number;
+    initialPosition: number;
+  } | null>(null);
+  const [initialBoard, setInitialBoard] = useState<Board | null>(null);
+  const { moveCard, moveCardOptimistic, setCurrentBoard } = useBoardStore();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -54,6 +60,12 @@ export const BoardView = ({ board }: BoardViewProps) => {
     const result = findCardAndColumn(cardId);
     if (result) {
       setActiveCard(result.card);
+      setDragStartInfo({
+        cardId,
+        sourceColumnId: result.columnId,
+        initialPosition: result.card.position,
+      });
+      setInitialBoard(board);
     }
   };
 
@@ -94,26 +106,35 @@ export const BoardView = ({ board }: BoardViewProps) => {
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
-    setActiveCard(null);
+    const currentDragInfo = dragStartInfo;
+    const originalBoard = initialBoard;
 
-    if (!over) return;
+    setActiveCard(null);
+    setDragStartInfo(null);
+    setInitialBoard(null);
+
+    if (!over) {
+      if (originalBoard) {
+        setCurrentBoard(originalBoard);
+      }
+      return;
+    }
 
     const activeId = Number(active.id);
     const overId = over.id;
 
-    const activeInfo = findCardAndColumn(activeId);
-    if (!activeInfo) return;
+    if (!currentDragInfo) return;
 
     const isOverColumn = String(overId).startsWith('column-');
     let targetColumnId: number | null = null;
-    let newPosition: number;
+    let finalPosition: number;
 
     if (isOverColumn) {
       targetColumnId = Number(String(overId).replace('column-', ''));
       const targetColumn = board.columns.find(c => c.id === targetColumnId);
       if (!targetColumn) return;
       const currentIndex = targetColumn.cards.findIndex(c => c.id === activeId);
-      newPosition =
+      finalPosition =
         currentIndex >= 0 ? currentIndex : targetColumn.cards.length;
     } else {
       const overCardId = Number(overId);
@@ -123,24 +144,34 @@ export const BoardView = ({ board }: BoardViewProps) => {
       const targetColumn = board.columns.find(c => c.id === targetColumnId);
       if (!targetColumn) return;
 
-      const overIndex = targetColumn.cards.findIndex(c => c.id === overCardId);
-      if (overIndex >= 0) {
-        newPosition = overIndex;
+      if (currentDragInfo.sourceColumnId === targetColumnId) {
+        const overIndex = targetColumn.cards.findIndex(
+          c => c.id === overCardId,
+        );
+        finalPosition = overIndex >= 0 ? overIndex : 0;
       } else {
-        newPosition = targetColumn.cards.length;
+        const cardIndex = targetColumn.cards.findIndex(c => c.id === activeId);
+        if (cardIndex >= 0) {
+          finalPosition = cardIndex;
+        } else {
+          const overIndex = targetColumn.cards.findIndex(
+            c => c.id === overCardId,
+          );
+          finalPosition =
+            overIndex >= 0 ? overIndex : targetColumn.cards.length;
+        }
       }
     }
 
-    const currentCard = activeInfo.card;
     if (
-      activeInfo.columnId === targetColumnId &&
-      currentCard.position === newPosition
+      currentDragInfo.sourceColumnId === targetColumnId &&
+      currentDragInfo.initialPosition === finalPosition
     ) {
       return;
     }
 
     if (targetColumnId !== null) {
-      await moveCard(activeId, targetColumnId, newPosition);
+      await moveCard(activeId, targetColumnId, finalPosition);
     }
   };
 
