@@ -11,7 +11,6 @@ A full-stack Kanban board web application for creating, managing, and organizing
 Before starting the application, configure your environment variables by duplicating the example `.env` file:
 
 ```bash
-# Setup backend environment variables
 cp backend/.env.example backend/.env
 ```
 
@@ -20,7 +19,6 @@ cp backend/.env.example backend/.env
 Make sure you have Docker installed on your machine.
 
 ```bash
-# Start all services (frontend, backend, database)
 docker compose up --build
 ```
 
@@ -112,7 +110,20 @@ The application uses a PostgreSQL database managed via Prisma ORM:
 
 ```bash
 cd backend
-
-# Run integration tests
+npm install
+npx prisma generate
 npm test
+npm run lint
+npm run build
+npm run format:check
+```
+
+### Frontend Testing
+
+```bash
+cd frontend
+npm install
+npm run lint
+npm run build
+npm run format:check
 ```
