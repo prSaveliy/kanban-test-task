@@ -6,6 +6,7 @@ declare global {
       HOST?: string;
       CORS_ORIGIN: string;
       DATABASE_URL: string;
+      LOG_LEVEL?: string;
     }
   }
 }
