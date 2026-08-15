@@ -14,7 +14,7 @@ export const Header = () => {
     e.preventDefault();
     const trimmedId = boardIdInput.trim();
     if (!trimmedId) {
-      setSearchError('Paste the board ID to find the board');
+      setSearchError('Board ID is required');
       return;
     }
 
@@ -52,7 +52,7 @@ export const Header = () => {
                     setBoardIdInput(e.target.value);
                     if (searchError) setSearchError(null);
                   }}
-                  placeholder="Enter board ID..."
+                  placeholder="Paste the board ID to find the board"
                   className="flex-1 px-3 py-1.5 text-xs font-mono bg-neutral-50 border border-neutral-300 focus:outline-none focus:border-neutral-900 focus:bg-white text-neutral-800 placeholder-neutral-400 transition-colors"
                 />
                 <button
@@ -63,13 +63,9 @@ export const Header = () => {
                 </button>
               </form>
               <div className="mt-1 min-h-[16px]">
-                {searchError ? (
+                {searchError && (
                   <p className="text-[11px] font-mono text-red-600 tracking-tight">
                     {searchError}
-                  </p>
-                ) : (
-                  <p className="text-[11px] font-mono text-neutral-400 tracking-tight">
-                    Paste the board ID to find the board
                   </p>
                 )}
               </div>
