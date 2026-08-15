@@ -4,6 +4,7 @@ import { pinoHttp } from 'pino-http';
 import { getCorsSettings } from './utils/cors.js';
 import { logger } from './utils/logger.js';
 import { errorHandler } from './utils/errorHandler.js';
+import { apiRouter, healthRoutes } from './routes/index.js';
 
 const buildApp = () => {
   const app = express();
@@ -24,6 +25,9 @@ const buildApp = () => {
   );
   app.use(cors(getCorsSettings()));
   app.use(express.json());
+
+  app.use('/health', healthRoutes);
+  app.use('/api', apiRouter);
 
   app.use(errorHandler);
 
