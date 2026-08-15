@@ -23,14 +23,16 @@ export const BoardColumn = ({ column }: BoardColumnProps) => {
     },
   });
 
-  const cardIds = column.cards.map((card) => card.id);
+  const cardIds = column.cards.map(card => card.id);
 
   return (
     <>
       <div
         ref={setNodeRef}
         className={`flex flex-col bg-neutral-50/70 border border-neutral-300 h-full min-h-[500px] transition-colors ${
-          isOver ? 'bg-neutral-100 border-neutral-400 ring-1 ring-neutral-400' : ''
+          isOver
+            ? 'bg-neutral-100 border-neutral-400 ring-1 ring-neutral-400'
+            : ''
         }`}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-300 bg-white">
@@ -57,7 +59,7 @@ export const BoardColumn = ({ column }: BoardColumnProps) => {
             items={cardIds}
             strategy={verticalListSortingStrategy}
           >
-            {column.cards.map((card) => (
+            {column.cards.map(card => (
               <CardItem key={card.id} card={card} />
             ))}
           </SortableContext>

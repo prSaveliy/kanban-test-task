@@ -52,7 +52,7 @@ const EditBoardModalContent = ({
           <input
             type="text"
             value={boardName}
-            onChange={(e) => {
+            onChange={e => {
               setBoardName(e.target.value);
               if (errorMessage) setErrorMessage(null);
             }}
@@ -60,7 +60,9 @@ const EditBoardModalContent = ({
             className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-300 focus:outline-none focus:border-neutral-900 focus:bg-white text-neutral-900 placeholder-neutral-400 transition-colors"
           />
           {errorMessage && (
-            <p className="mt-1 text-xs text-red-600 font-mono">{errorMessage}</p>
+            <p className="mt-1 text-xs text-red-600 font-mono">
+              {errorMessage}
+            </p>
           )}
         </div>
 

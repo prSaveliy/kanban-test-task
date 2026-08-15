@@ -69,8 +69,8 @@ export const CardItem = ({ card }: CardItemProps) => {
           <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shrink-0">
             <button
               type="button"
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={(e) => {
+              onPointerDown={e => e.stopPropagation()}
+              onClick={e => {
                 e.stopPropagation();
                 setIsEditModalOpen(true);
               }}
@@ -93,8 +93,8 @@ export const CardItem = ({ card }: CardItemProps) => {
             </button>
             <button
               type="button"
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={(e) => {
+              onPointerDown={e => e.stopPropagation()}
+              onClick={e => {
                 e.stopPropagation();
                 setIsDeleteModalOpen(true);
               }}

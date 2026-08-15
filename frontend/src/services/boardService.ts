@@ -12,7 +12,10 @@ export const boardService = {
     return response.data;
   },
 
-  updateBoard: async (boardId: string, data: UpdateBoardDto): Promise<Board> => {
+  updateBoard: async (
+    boardId: string,
+    data: UpdateBoardDto,
+  ): Promise<Board> => {
     const response = await apiClient.patch<Board>(`/boards/${boardId}`, data);
     return response.data;
   },

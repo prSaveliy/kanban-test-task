@@ -14,11 +14,27 @@ interface BoardState {
   createBoard: (name: string) => Promise<Board>;
   updateBoard: (boardId: string, name: string) => Promise<void>;
   deleteBoard: (boardId: string) => Promise<void>;
-  createCard: (columnId: number, title: string, description?: string) => Promise<void>;
-  updateCard: (cardId: number, title?: string, description?: string) => Promise<void>;
+  createCard: (
+    columnId: number,
+    title: string,
+    description?: string,
+  ) => Promise<void>;
+  updateCard: (
+    cardId: number,
+    title?: string,
+    description?: string,
+  ) => Promise<void>;
   deleteCard: (cardId: number) => Promise<void>;
-  moveCard: (cardId: number, targetColumnId: number, newPosition: number) => Promise<void>;
-  moveCardOptimistic: (cardId: number, targetColumnId: number, newPosition: number) => void;
+  moveCard: (
+    cardId: number,
+    targetColumnId: number,
+    newPosition: number,
+  ) => Promise<void>;
+  moveCardOptimistic: (
+    cardId: number,
+    targetColumnId: number,
+    newPosition: number,
+  ) => void;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
@@ -48,7 +64,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     } catch (err: unknown) {
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Board not found'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Board not found'
           : 'Board not found';
       set({ error: message, isLoading: false, currentBoard: null });
       return null;
@@ -64,7 +81,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     } catch (err: unknown) {
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to create board'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to create board'
           : 'Failed to create board';
       set({ error: message, isLoading: false });
       throw new Error(message, { cause: err });
@@ -80,7 +98,13 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       const updated = await boardService.updateBoard(boardId, { name });
       const current = get().currentBoard;
       if (current && current.id === boardId) {
-        set({ currentBoard: { ...current, name: updated.name, updatedAt: updated.updatedAt } });
+        set({
+          currentBoard: {
+            ...current,
+            name: updated.name,
+            updatedAt: updated.updatedAt,
+          },
+        });
       }
     } catch (err: unknown) {
       if (previousBoard) {
@@ -88,7 +112,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       }
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to update board'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to update board'
           : 'Failed to update board';
       set({ error: message });
       throw new Error(message, { cause: err });
@@ -103,7 +128,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     } catch (err: unknown) {
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to delete board'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to delete board'
           : 'Failed to delete board';
       set({ error: message, isLoading: false });
       throw new Error(message, { cause: err });
@@ -114,10 +140,16 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     const current = get().currentBoard;
     if (!current) return;
     try {
-      const newCard = await cardService.createCard({ columnId, title, description });
+      const newCard = await cardService.createCard({
+        columnId,
+        title,
+        description,
+      });
       const updatedColumns = current.columns.map((col: Column) => {
         if (col.id === columnId) {
-          const cards = [...col.cards, newCard].sort((a, b) => a.position - b.position);
+          const cards = [...col.cards, newCard].sort(
+            (a, b) => a.position - b.position,
+          );
           return { ...col, cards };
         }
         return col;
@@ -126,7 +158,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     } catch (err: unknown) {
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to create card'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to create card'
           : 'Failed to create card';
       set({ error: message });
       throw new Error(message, { cause: err });
@@ -155,19 +188,29 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ currentBoard: { ...current, columns: updatedColumns } });
 
     try {
-      const updatedCard = await cardService.updateCard(cardId, { title, description });
-      const refreshedColumns = get().currentBoard?.columns.map((col: Column) => ({
-        ...col,
-        cards: col.cards.map((card: Card) => (card.id === cardId ? updatedCard : card)),
-      }));
+      const updatedCard = await cardService.updateCard(cardId, {
+        title,
+        description,
+      });
+      const refreshedColumns = get().currentBoard?.columns.map(
+        (col: Column) => ({
+          ...col,
+          cards: col.cards.map((card: Card) =>
+            card.id === cardId ? updatedCard : card,
+          ),
+        }),
+      );
       if (refreshedColumns && get().currentBoard) {
-        set({ currentBoard: { ...get().currentBoard!, columns: refreshedColumns } });
+        set({
+          currentBoard: { ...get().currentBoard!, columns: refreshedColumns },
+        });
       }
     } catch (err: unknown) {
       set({ currentBoard: previousBoard });
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to update card'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to update card'
           : 'Failed to update card';
       set({ error: message });
       throw new Error(message, { cause: err });
@@ -194,14 +237,19 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       set({ currentBoard: previousBoard });
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to delete card'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to delete card'
           : 'Failed to delete card';
       set({ error: message });
       throw new Error(message, { cause: err });
     }
   },
 
-  moveCardOptimistic: (cardId: number, targetColumnId: number, newPosition: number) => {
+  moveCardOptimistic: (
+    cardId: number,
+    targetColumnId: number,
+    newPosition: number,
+  ) => {
     const current = get().currentBoard;
     if (!current) return;
 
@@ -222,11 +270,20 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     const newColumns = current.columns.map((col: Column) => {
       if (col.id === sourceColumnId && sourceColumnId === targetColumnId) {
         const remaining = col.cards.filter((c: Card) => c.id !== cardId);
-        const clampedPosition = Math.max(0, Math.min(newPosition, remaining.length));
-        remaining.splice(clampedPosition, 0, { ...targetCard!, columnId: targetColumnId });
+        const clampedPosition = Math.max(
+          0,
+          Math.min(newPosition, remaining.length),
+        );
+        remaining.splice(clampedPosition, 0, {
+          ...targetCard!,
+          columnId: targetColumnId,
+        });
         return {
           ...col,
-          cards: remaining.map((card: Card, index: number) => ({ ...card, position: index })),
+          cards: remaining.map((card: Card, index: number) => ({
+            ...card,
+            position: index,
+          })),
         };
       }
 
@@ -234,17 +291,29 @@ export const useBoardStore = create<BoardState>((set, get) => ({
         const remaining = col.cards.filter((c: Card) => c.id !== cardId);
         return {
           ...col,
-          cards: remaining.map((card: Card, index: number) => ({ ...card, position: index })),
+          cards: remaining.map((card: Card, index: number) => ({
+            ...card,
+            position: index,
+          })),
         };
       }
 
       if (col.id === targetColumnId) {
         const cards = [...col.cards];
-        const clampedPosition = Math.max(0, Math.min(newPosition, cards.length));
-        cards.splice(clampedPosition, 0, { ...targetCard!, columnId: targetColumnId });
+        const clampedPosition = Math.max(
+          0,
+          Math.min(newPosition, cards.length),
+        );
+        cards.splice(clampedPosition, 0, {
+          ...targetCard!,
+          columnId: targetColumnId,
+        });
         return {
           ...col,
-          cards: cards.map((card: Card, index: number) => ({ ...card, position: index })),
+          cards: cards.map((card: Card, index: number) => ({
+            ...card,
+            position: index,
+          })),
         };
       }
 
@@ -254,7 +323,11 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ currentBoard: { ...current, columns: newColumns } });
   },
 
-  moveCard: async (cardId: number, targetColumnId: number, newPosition: number) => {
+  moveCard: async (
+    cardId: number,
+    targetColumnId: number,
+    newPosition: number,
+  ) => {
     const boardId = get().currentBoard?.id;
     get().moveCardOptimistic(cardId, targetColumnId, newPosition);
     try {
@@ -265,7 +338,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       }
       const message =
         typeof err === 'object' && err !== null && 'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Failed to move card'
+          ? (err as { response?: { data?: { error?: string } } }).response?.data
+              ?.error || 'Failed to move card'
           : 'Failed to move card';
       set({ error: message });
     }

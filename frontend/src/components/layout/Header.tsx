@@ -48,7 +48,7 @@ export const Header = () => {
                 <input
                   type="text"
                   value={boardIdInput}
-                  onChange={(e) => {
+                  onChange={e => {
                     setBoardIdInput(e.target.value);
                     if (searchError) setSearchError(null);
                   }}
