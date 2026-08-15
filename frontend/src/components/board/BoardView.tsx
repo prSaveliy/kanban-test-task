@@ -101,6 +101,9 @@ export const BoardView = ({ board }: BoardViewProps) => {
     const activeId = Number(active.id);
     const overId = over.id;
 
+    const activeInfo = findCardAndColumn(activeId);
+    if (!activeInfo) return;
+
     const isOverColumn = String(overId).startsWith('column-');
     let targetColumnId: number | null = null;
     let newPosition: number;
@@ -109,8 +112,9 @@ export const BoardView = ({ board }: BoardViewProps) => {
       targetColumnId = Number(String(overId).replace('column-', ''));
       const targetColumn = board.columns.find(c => c.id === targetColumnId);
       if (!targetColumn) return;
-      const cardIndex = targetColumn.cards.findIndex(c => c.id === activeId);
-      newPosition = cardIndex >= 0 ? cardIndex : targetColumn.cards.length;
+      const currentIndex = targetColumn.cards.findIndex(c => c.id === activeId);
+      newPosition =
+        currentIndex >= 0 ? currentIndex : targetColumn.cards.length;
     } else {
       const overCardId = Number(overId);
       const overInfo = findCardAndColumn(overCardId);
@@ -119,14 +123,20 @@ export const BoardView = ({ board }: BoardViewProps) => {
       const targetColumn = board.columns.find(c => c.id === targetColumnId);
       if (!targetColumn) return;
 
-      const cardIndex = targetColumn.cards.findIndex(c => c.id === activeId);
       const overIndex = targetColumn.cards.findIndex(c => c.id === overCardId);
-
-      if (cardIndex >= 0) {
-        newPosition = cardIndex;
+      if (overIndex >= 0) {
+        newPosition = overIndex;
       } else {
-        newPosition = overIndex >= 0 ? overIndex : targetColumn.cards.length;
+        newPosition = targetColumn.cards.length;
       }
+    }
+
+    const currentCard = activeInfo.card;
+    if (
+      activeInfo.columnId === targetColumnId &&
+      currentCard.position === newPosition
+    ) {
+      return;
     }
 
     if (targetColumnId !== null) {
