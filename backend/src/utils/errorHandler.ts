@@ -15,6 +15,7 @@ export const errorHandler = (
   const isErrorObj = typeof err === 'object' && err !== null;
   const appErr = (isErrorObj ? err : {}) as AppError;
   const statusCode = appErr.statusCode;
+  const isProduction = process.env.NODE_ENV === 'production';
 
   if (typeof statusCode === 'number') {
     if (statusCode >= 500) {
@@ -30,16 +31,16 @@ export const errorHandler = (
 
       res.status(statusCode).json({
         error: appErr.message || 'Internal server error',
-        ...(appErr.details ? { details: appErr.details } : {}),
-        cause: process.env.NODE_ENV === 'production' ? undefined : appErr.cause,
+        ...(appErr.details && !isProduction ? { details: appErr.details } : {}),
+        cause: isProduction ? undefined : appErr.cause,
       });
       return;
     }
 
     res.status(statusCode).json({
       error: appErr.message,
-      ...(appErr.details ? { details: appErr.details } : {}),
-      cause: process.env.NODE_ENV === 'production' ? undefined : appErr.cause,
+      ...(appErr.details && !isProduction ? { details: appErr.details } : {}),
+      cause: isProduction ? undefined : appErr.cause,
     });
     return;
   }
