@@ -144,23 +144,8 @@ export const BoardView = ({ board }: BoardViewProps) => {
       const targetColumn = board.columns.find(c => c.id === targetColumnId);
       if (!targetColumn) return;
 
-      if (currentDragInfo.sourceColumnId === targetColumnId) {
-        const overIndex = targetColumn.cards.findIndex(
-          c => c.id === overCardId,
-        );
-        finalPosition = overIndex >= 0 ? overIndex : 0;
-      } else {
-        const cardIndex = targetColumn.cards.findIndex(c => c.id === activeId);
-        if (cardIndex >= 0) {
-          finalPosition = cardIndex;
-        } else {
-          const overIndex = targetColumn.cards.findIndex(
-            c => c.id === overCardId,
-          );
-          finalPosition =
-            overIndex >= 0 ? overIndex : targetColumn.cards.length;
-        }
-      }
+      const overIndex = targetColumn.cards.findIndex(c => c.id === overCardId);
+      finalPosition = overIndex >= 0 ? overIndex : targetColumn.cards.length;
     }
 
     if (
