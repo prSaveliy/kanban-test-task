@@ -33,8 +33,8 @@ export const Header = () => {
     <>
       <header className="sticky top-0 z-40 w-full bg-white border-b border-neutral-300 shrink-0">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 gap-3">
-            <div className="flex items-center gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 gap-3 min-h-[56px]">
+            <div className="flex items-center gap-6 shrink-0">
               <Link
                 to="/"
                 className="text-lg font-mono font-bold tracking-widest text-neutral-900 hover:text-neutral-600 transition-colors uppercase select-none"
@@ -43,8 +43,11 @@ export const Header = () => {
               </Link>
             </div>
 
-            <div className="flex-1 max-w-lg mx-auto sm:mx-0 w-full">
-              <form onSubmit={handleSearch} className="flex gap-2">
+            <div className="flex-1 max-w-lg mx-auto sm:mx-0 w-full relative flex items-center">
+              <form
+                onSubmit={handleSearch}
+                className="flex gap-2 items-center w-full"
+              >
                 <input
                   type="text"
                   value={boardIdInput}
@@ -57,21 +60,21 @@ export const Header = () => {
                 />
                 <button
                   type="submit"
-                  className="px-3 py-1.5 text-xs font-mono tracking-wider uppercase bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-neutral-800 transition-colors"
+                  className="px-3 py-1.5 text-xs font-mono tracking-wider uppercase bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-neutral-800 transition-colors shrink-0"
                 >
                   Find
                 </button>
               </form>
-              <div className="mt-1 min-h-[16px]">
-                {searchError && (
-                  <p className="text-[11px] font-mono text-red-600 tracking-tight">
+              {searchError && (
+                <div className="absolute top-full left-0 pt-0.5 z-20">
+                  <p className="text-[11px] font-mono text-red-600 tracking-tight bg-white px-1 shadow-xs border border-red-200">
                     {searchError}
                   </p>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end shrink-0">
               <button
                 type="button"
                 onClick={() => setIsCreateModalOpen(true)}
