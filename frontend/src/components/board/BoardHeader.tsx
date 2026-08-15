@@ -46,11 +46,14 @@ export const BoardHeader = ({ board }: BoardHeaderProps) => {
     <>
       <div className="bg-white border-b border-neutral-300 py-3.5 px-4 sm:px-6 lg:px-8 shrink-0">
         <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-baseline gap-3">
-            <h1 className="text-xl font-bold font-mono tracking-tight text-neutral-900 uppercase">
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-3 min-w-0 max-w-full">
+            <h1
+              title={board.name}
+              className="text-xl font-bold font-mono tracking-tight text-neutral-900 uppercase truncate max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl"
+            >
               {board.name}
             </h1>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-xs font-mono text-neutral-400">ID:</span>
               <code className="text-xs font-mono bg-neutral-100 px-2 py-0.5 border border-neutral-200 text-neutral-700 select-all">
                 {board.id}
@@ -66,7 +69,7 @@ export const BoardHeader = ({ board }: BoardHeaderProps) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start md:self-auto">
+          <div className="flex items-center gap-2 self-start md:self-auto shrink-0">
             <button
               type="button"
               onClick={() => setIsEditModalOpen(true)}

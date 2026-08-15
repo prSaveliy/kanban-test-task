@@ -1,0 +1,5 @@
+export const LIMITS = {
+  BOARD_NAME_MAX: 60,
+  CARD_TITLE_MAX: 100,
+  CARD_DESCRIPTION_MAX: 500,
+} as const;

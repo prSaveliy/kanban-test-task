@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Modal } from '../common/Modal';
 import { useBoardStore } from '../../store';
+import { LIMITS } from '../../utils/constants';
 
 interface EditBoardModalProps {
   isOpen: boolean;
@@ -27,6 +28,12 @@ const EditBoardModalContent = ({
       setErrorMessage('Board name is required');
       return;
     }
+    if (trimmed.length > LIMITS.BOARD_NAME_MAX) {
+      setErrorMessage(
+        `Board name must be ${LIMITS.BOARD_NAME_MAX} characters or fewer`,
+      );
+      return;
+    }
 
     setIsSubmitting(true);
     setErrorMessage(null);
@@ -46,12 +53,18 @@ const EditBoardModalContent = ({
     <Modal isOpen={isOpen} onClose={onClose} title="Rename Board">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-1">
-            Board Name
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600">
+              Board Name
+            </label>
+            <span className="text-[11px] font-mono text-neutral-400">
+              {boardName.length}/{LIMITS.BOARD_NAME_MAX}
+            </span>
+          </div>
           <input
             type="text"
             value={boardName}
+            maxLength={LIMITS.BOARD_NAME_MAX}
             onChange={e => {
               setBoardName(e.target.value);
               if (errorMessage) setErrorMessage(null);

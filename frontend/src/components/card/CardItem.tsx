@@ -63,7 +63,10 @@ export const CardItem = ({ card }: CardItemProps) => {
         className="group relative bg-white border border-neutral-300 hover:border-neutral-500 p-3 shadow-xs hover:shadow-sm transition-all cursor-grab active:cursor-grabbing select-none"
       >
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-sm font-semibold text-neutral-900 leading-snug break-words flex-1">
+          <h3
+            title={card.title}
+            className="text-sm font-semibold text-neutral-900 leading-snug break-words line-clamp-2 flex-1"
+          >
             {card.title}
           </h3>
           <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shrink-0">
@@ -119,7 +122,10 @@ export const CardItem = ({ card }: CardItemProps) => {
         </div>
 
         {card.description && (
-          <p className="mt-2 text-xs text-neutral-600 font-sans leading-relaxed whitespace-pre-wrap break-words">
+          <p
+            title={card.description}
+            className="mt-2 text-xs text-neutral-600 font-sans leading-relaxed whitespace-pre-wrap break-words line-clamp-4"
+          >
             {card.description}
           </p>
         )}

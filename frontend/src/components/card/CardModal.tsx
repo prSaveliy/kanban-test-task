@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import type { Card } from '../../types';
 import { Modal } from '../common/Modal';
 import { useBoardStore } from '../../store';
+import { LIMITS } from '../../utils/constants';
 
 interface CardModalProps {
   isOpen: boolean;
@@ -33,15 +34,28 @@ const CardModalContent = ({
       setErrorMessage('Card title is required');
       return;
     }
+    if (trimmedTitle.length > LIMITS.CARD_TITLE_MAX) {
+      setErrorMessage(
+        `Card title must be ${LIMITS.CARD_TITLE_MAX} characters or fewer`,
+      );
+      return;
+    }
+    const trimmedDescription = description.trim();
+    if (trimmedDescription.length > LIMITS.CARD_DESCRIPTION_MAX) {
+      setErrorMessage(
+        `Card description must be ${LIMITS.CARD_DESCRIPTION_MAX} characters or fewer`,
+      );
+      return;
+    }
 
     setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
       if (isEditing && initialCard) {
-        await updateCard(initialCard.id, trimmedTitle, description.trim());
+        await updateCard(initialCard.id, trimmedTitle, trimmedDescription);
       } else if (columnId !== undefined) {
-        await createCard(columnId, trimmedTitle, description.trim());
+        await createCard(columnId, trimmedTitle, trimmedDescription);
       }
       onClose();
     } catch (err: unknown) {
@@ -61,12 +75,18 @@ const CardModalContent = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-1">
-            Title
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600">
+              Title
+            </label>
+            <span className="text-[11px] font-mono text-neutral-400">
+              {title.length}/{LIMITS.CARD_TITLE_MAX}
+            </span>
+          </div>
           <input
             type="text"
             value={title}
+            maxLength={LIMITS.CARD_TITLE_MAX}
             onChange={e => {
               setTitle(e.target.value);
               if (errorMessage) setErrorMessage(null);
@@ -83,12 +103,21 @@ const CardModalContent = ({
         </div>
 
         <div>
-          <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-1">
-            Description
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600">
+              Description
+            </label>
+            <span className="text-[11px] font-mono text-neutral-400">
+              {description.length}/{LIMITS.CARD_DESCRIPTION_MAX}
+            </span>
+          </div>
           <textarea
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            maxLength={LIMITS.CARD_DESCRIPTION_MAX}
+            onChange={e => {
+              setDescription(e.target.value);
+              if (errorMessage) setErrorMessage(null);
+            }}
             placeholder="Add details or context..."
             rows={4}
             className="w-full px-3 py-2 text-sm bg-neutral-50 border border-neutral-300 focus:outline-none focus:border-neutral-900 focus:bg-white text-neutral-900 placeholder-neutral-400 transition-colors resize-none font-sans"

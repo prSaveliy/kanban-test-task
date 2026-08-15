@@ -155,11 +155,11 @@ export const BoardView = ({ board }: BoardViewProps) => {
           <DragOverlay>
             {activeCard ? (
               <div className="bg-white border-2 border-neutral-900 p-3 shadow-lg rotate-1 max-w-sm">
-                <h3 className="text-sm font-semibold text-neutral-900 leading-snug break-words">
+                <h3 className="text-sm font-semibold text-neutral-900 leading-snug break-words line-clamp-2">
                   {activeCard.title}
                 </h3>
                 {activeCard.description && (
-                  <p className="mt-2 text-xs text-neutral-600 font-sans leading-relaxed whitespace-pre-wrap break-words">
+                  <p className="mt-2 text-xs text-neutral-600 font-sans leading-relaxed whitespace-pre-wrap break-words line-clamp-4">
                     {activeCard.description}
                   </p>
                 )}
