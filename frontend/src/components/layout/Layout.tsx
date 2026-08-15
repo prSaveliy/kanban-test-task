@@ -7,9 +7,9 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-neutral-100 text-neutral-900 flex flex-col font-sans antialiased">
+    <div className="h-full min-h-screen bg-neutral-100 text-neutral-900 flex flex-col font-sans antialiased">
       <Header />
-      <main className="flex-1 flex flex-col">{children}</main>
+      <main className="flex-1 flex flex-col min-h-0">{children}</main>
     </div>
   );
 };

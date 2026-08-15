@@ -31,8 +31,8 @@ export const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white border-b border-neutral-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-40 w-full bg-white border-b border-neutral-300 shrink-0">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 gap-3">
             <div className="flex items-center gap-6">
               <Link

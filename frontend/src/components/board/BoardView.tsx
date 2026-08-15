@@ -138,7 +138,7 @@ export const BoardView = ({ board }: BoardViewProps) => {
     <div className="flex-1 flex flex-col min-h-0 bg-neutral-100">
       <BoardHeader board={board} />
 
-      <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="flex-1 w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col min-h-0">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -146,7 +146,7 @@ export const BoardView = ({ board }: BoardViewProps) => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch flex-1 min-h-0">
             {board.columns.map(column => (
               <BoardColumn key={column.id} column={column} />
             ))}

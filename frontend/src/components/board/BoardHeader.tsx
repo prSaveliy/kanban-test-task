@@ -44,8 +44,8 @@ export const BoardHeader = ({ board }: BoardHeaderProps) => {
 
   return (
     <>
-      <div className="bg-white border-b border-neutral-300 py-4 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-white border-b border-neutral-300 py-3.5 px-4 sm:px-6 lg:px-8 shrink-0">
+        <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-3">
             <h1 className="text-xl font-bold font-mono tracking-tight text-neutral-900 uppercase">
               {board.name}

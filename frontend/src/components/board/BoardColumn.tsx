@@ -29,13 +29,13 @@ export const BoardColumn = ({ column }: BoardColumnProps) => {
     <>
       <div
         ref={setNodeRef}
-        className={`flex flex-col bg-neutral-50/70 border border-neutral-300 h-full min-h-[500px] transition-colors ${
+        className={`flex flex-col bg-neutral-50/70 border border-neutral-300 h-full min-h-[350px] transition-colors ${
           isOver
             ? 'bg-neutral-100 border-neutral-400 ring-1 ring-neutral-400'
             : ''
         }`}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-300 bg-white">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-300 bg-white shrink-0">
           <div className="flex items-center gap-2">
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-800">
               {column.name}
@@ -54,7 +54,7 @@ export const BoardColumn = ({ column }: BoardColumnProps) => {
           </button>
         </div>
 
-        <div className="flex-1 p-3 space-y-2.5 overflow-y-auto">
+        <div className="flex-1 p-3 space-y-2.5 overflow-y-auto min-h-0">
           <SortableContext
             items={cardIds}
             strategy={verticalListSortingStrategy}
