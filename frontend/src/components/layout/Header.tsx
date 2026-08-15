@@ -7,26 +7,23 @@ export const Header = () => {
   const navigate = useNavigate();
   const [boardIdInput, setBoardIdInput] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
-  const { fetchBoard } = useBoardStore();
+  const [localError, setLocalError] = useState<string | null>(null);
+  const { error, clearError } = useBoardStore();
 
-  const handleSearch = async (e: FormEvent) => {
+  const displayedError = localError || error;
+
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     const trimmedId = boardIdInput.trim();
     if (!trimmedId) {
-      setSearchError('Board ID is required');
+      setLocalError('Board ID is required');
       return;
     }
 
-    setSearchError(null);
-    const board = await fetchBoard(trimmedId);
-    if (board) {
-      setBoardIdInput('');
-      setSearchError(null);
-      navigate(`/boards/${board.id}`);
-    } else {
-      setSearchError('Board not found with the provided ID');
-    }
+    setLocalError(null);
+    clearError();
+    setBoardIdInput('');
+    navigate(`/boards/${trimmedId}`);
   };
 
   return (
@@ -37,6 +34,10 @@ export const Header = () => {
             <div className="flex items-center gap-6 shrink-0">
               <Link
                 to="/"
+                onClick={() => {
+                  clearError();
+                  setLocalError(null);
+                }}
                 className="text-lg font-mono font-bold tracking-widest text-neutral-900 hover:text-neutral-600 transition-colors uppercase select-none"
               >
                 kanban
@@ -53,7 +54,8 @@ export const Header = () => {
                   value={boardIdInput}
                   onChange={e => {
                     setBoardIdInput(e.target.value);
-                    if (searchError) setSearchError(null);
+                    if (localError) setLocalError(null);
+                    if (error) clearError();
                   }}
                   placeholder="Paste the board ID to find the board"
                   className="flex-1 px-3 py-1.5 text-xs font-mono bg-neutral-50 border border-neutral-300 focus:outline-none focus:border-neutral-900 focus:bg-white text-neutral-800 placeholder-neutral-400 transition-colors"
@@ -65,10 +67,10 @@ export const Header = () => {
                   Find
                 </button>
               </form>
-              {searchError && (
+              {displayedError && (
                 <div className="absolute top-full left-0 pt-0.5 z-20">
                   <p className="text-[11px] font-mono text-red-600 tracking-tight bg-white px-1 shadow-xs border border-red-200">
-                    {searchError}
+                    {displayedError}
                   </p>
                 </div>
               )}
