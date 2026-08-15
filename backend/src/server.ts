@@ -1,7 +1,7 @@
+import { validateEnv } from './config/validateEnv.js';
 import buildApp from './app.js';
-import dotenv from 'dotenv';
 
-dotenv.config();
+validateEnv();
 
 const start = () => {
   const app = buildApp();
