@@ -3,7 +3,6 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'test' | 'production';
       PORT: string;
-      HOST?: string;
       CORS_ORIGIN: string;
       DATABASE_URL: string;
       LOG_LEVEL?: string;
